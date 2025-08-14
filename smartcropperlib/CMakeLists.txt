@@ -13,10 +13,8 @@ set(OPENCV_3RD_LIB_DIR opencv/3rdparty/${ANDROID_ABI}/)
 include_directories(opencv/include
                     src/main/cpp/include)
 
-
 link_directories(${OPENCV_LIB_DIR}
                  ${OPENCV_3RD_LIB_DIR})
-
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -26,6 +24,11 @@ link_directories(${OPENCV_LIB_DIR}
 aux_source_directory(${SRC_DIR} DIR_LIB_SOURCE)
 
 add_library(${TARGET} SHARED ${DIR_LIB_SOURCE})
+
+# Forces ELF segment alignment to 16KB for compatibility with Android 15+
+# This is required by Google Play when compiling with NDK r26 or earlier
+# to support devices that use 16 KB page sizes.
+target_link_options(${TARGET} PRIVATE "-Wl,-z,max-page-size=16384")
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -40,8 +43,7 @@ target_link_libraries(${TARGET} log jnigraphics z)
 # build script, prebuilt third-party libraries, or system libraries.
 
 if(${ANDROID_ABI} STREQUAL x86 OR ${ANDROID_ABI} STREQUAL x86_64)
-target_link_libraries(${TARGET} opencv_imgproc opencv_core ippiw ippicv ittnotify tbb cpufeatures)
+    target_link_libraries(${TARGET} opencv_imgproc opencv_core ippiw ippicv ittnotify tbb cpufeatures)
 else()
-target_link_libraries(${TARGET} opencv_imgproc opencv_core tegra_hal tbb cpufeatures)
+    target_link_libraries(${TARGET} opencv_imgproc opencv_core tegra_hal tbb cpufeatures)
 endif()
-
