@@ -1,1 +1,2 @@
-include ':app', ':smartcropperlib'
+//include ':app', ':smartcropperlib'
+include ':smartcropperlib'

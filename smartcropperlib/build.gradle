@@ -1,7 +1,8 @@
 plugins {
     id 'com.android.library'
-    //id 'maven-publish'
 }
+
+apply from: 'publish.gradle'
 
 android {
     namespace="me.pqpo.smartcropperlib"
@@ -38,23 +39,5 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
     api 'org.tensorflow:tensorflow-lite:2.17.0'
 }
-
-/*
-publishing {
-    publications {
-        release(MavenPublication) {
-            //from components.release
-            groupId = 'com.github.pqpo'
-            artifactId = 'smartcropperlib'
-            version = '2.1.4'
-        }
-    }
-    repositories {
-        maven {
-            url "file://${buildDir}/repo"
-        }
-    }
-}*/
